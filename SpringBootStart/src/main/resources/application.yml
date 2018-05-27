@@ -1,0 +1,15 @@
+server:
+  servlet:
+    context-path: /springbootstart
+  port: 8080
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/login?useSSL=false
+    username: root
+    password: agytorudhcv11
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
