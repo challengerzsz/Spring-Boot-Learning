@@ -1,0 +1,17 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /PageHelper
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/pagehelper?useSSL=false
+    username: root
+    password: agytorudhcv11
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+pagehelper:
+  offset-as-page-num: true
+  row-bounds-with-count: true
+  reasonable: true
+
