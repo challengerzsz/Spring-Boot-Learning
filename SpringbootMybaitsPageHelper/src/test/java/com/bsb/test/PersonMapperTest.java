@@ -1,0 +1,73 @@
+package com.bsb.test;
+
+import com.alibaba.fastjson.JSON;
+import com.bsb.domain.PageInfo;
+import com.bsb.domain.model.Person;
+import com.bsb.service.IPersonService;
+import com.github.pagehelper.Page;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class PersonMapperTest {
+
+    private Logger logger = LoggerFactory.getLogger(PersonMapperTest.class);
+
+    @Autowired
+    private IPersonService personService;
+
+    @Before
+    public void testInsert() {
+        Person person = new Person();
+        person.setName("测试");
+        person.setAddress("address");
+        person.setAge(10);
+        personService.insert(person);
+
+        Assert.assertNotNull(person.getId());
+        logger.debug(JSON.toJSONString(person));
+    }
+
+    @Test
+    public void testFindAll() {
+        List<Person> persons = personService.findAll();
+
+        Assert.assertNotNull(persons);
+        logger.debug(JSON.toJSONString(persons));
+    }
+
+    @Test
+    public void testFindByPage() {
+        Page<Person> persons = personService.findByPage(1, 2);
+        // 需要把Page包装成PageInfo对象才能序列化。该插件也默认实现了一个PageInfo
+        PageInfo<Person> pageInfo = new PageInfo<>(persons);
+        Assert.assertNotNull(persons);
+        logger.debug(pageInfo.toString());
+        logger.debug(JSON.toJSONString(pageInfo));
+    }
+
+    @Test
+    public void testCacheByPage() {
+        long begin = System.currentTimeMillis();
+        List<Person> persons = personService.findAll();
+        long ing = System.currentTimeMillis();
+        personService.findAll();
+        long end = System.currentTimeMillis();
+        logger.debug("第一次请求时间：" + (ing - begin) + "ms");
+        logger.debug("第二次请求时间:" + (end - ing) + "ms");
+
+        Assert.assertNotNull(persons);
+        logger.debug(persons.toString());
+        logger.debug(JSON.toJSONString(persons));
+    }
+}
